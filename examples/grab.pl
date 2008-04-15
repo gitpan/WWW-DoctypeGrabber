@@ -13,7 +13,7 @@ my $URI = shift;
 
 my $grabber = WWW::DoctypeGrabber->new;
 
-my $res_ref = $grabber->grab($URI)
+$grabber->grab($URI)
     or die "Error: " . $grabber->error;
 
 print "Results: $grabber\n";

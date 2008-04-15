@@ -1,5 +1,8 @@
 Revision history for WWW-DoctypeGrabber
 
+0.002   Apr 15, 2008
+        added the C<raw()> argument/method
+
 0.001   Apr 15, 2008
         First version, released on an unsuspecting world.
 

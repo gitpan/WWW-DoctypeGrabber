@@ -3,7 +3,7 @@ package WWW::DoctypeGrabber;
 use warnings;
 use strict;
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 use Carp;
 use LWP::UserAgent;
@@ -14,6 +14,7 @@ __PACKAGE__->mk_classaccessors qw(
     error
     doctype
     result
+    raw
 );
 
 sub new {
@@ -33,6 +34,7 @@ sub new {
     );
 
     $self->ua( $args{ua} );
+    $self->raw( $args{raw} );
     return $self;
 }
 
@@ -72,10 +74,12 @@ sub _parse_doctype {
             $parse_result{non_white_space} = length $pre_text;
         }
 
-        if ( my ( $doctype_string ) = $content =~ m{(<!DOCTYPE[^>]+?>)}i ) {
+        if ( my ( $doctype_string ) = $content =~ m{(<!DOCTYPE[^>]+>)}i ) {
             $parse_result{has_doctype} = 1;
             $doctype_string =~ s/\s+/ /g;
             $doctype_string =~ s/^\s+|\s+$//g;
+            $self->raw
+                and return $self->doctype($doctype_string);
 
             if ( $doctype_string
                 =~ s{^<!DOCTYPE html PUBLIC "-//W3C//DTD }{}i
@@ -112,6 +116,9 @@ sub _parse_doctype {
             else {
                 $parse_result{doctype} = $doctype_string;
             }
+        }
+        elsif( $self->raw ) {
+            return $self->doctype('NO DOCTYPE');
         }
     }
 
@@ -218,6 +225,7 @@ and whether or not the DTD URI matches the ones provided by W3C.
     my $grabber = WWW::DoctypeGrabber->new;
 
     my $grabber = WWW::DoctypeGrabber->new(
+        raw      => 1,
         timeout  => 30,
         max_size => 100,
     );
@@ -233,6 +241,16 @@ and whether or not the DTD URI matches the ones provided by W3C.
 Constructs and returns a new WWW::DoctypeGrabber object. Takes several
 arguments as key/value pairs but all of them are optional. The possible
 arguments are as follows:
+
+=head3 C<raw>
+
+    ->new( raw => 1 );
+
+B<Optional>. When set to a true value will make the C<grab()> method (see
+below) return the full doctype string as it appears in the document ( with
+the exception that all whitespace will appear as single spaces ). When
+set to a false value will cause the C<grab()> method return a hashref
+and interpret the kind of doctype on the page. B<Defaults to:> C<undef>
 
 =head3 C<timeout>
 
@@ -273,7 +291,8 @@ Instructs the object to grab the doctype from the webpage uri of which
 is specified as the first and only argument. On failure returns either
 C<undef> or an empty list depending on the context and the reason
 for failure will be available via C<error> method. On success returns
-a hashref with the following keys/values:
+the raw doctype if C<raw> argument to constructor is set to a true value,
+otherwise returns a hashref with the following keys/values:
 
     $VAR1 = {
         'doctype' => 'HTML 4.01 Strict + url',
@@ -326,7 +345,8 @@ method failed.
     print "Last doctype: " . $grabber->result->{doctype};
 
 Must be called after a successful call to C<grab()> method. Takes no
-arguments, returns the exact same hashref last call to C<grab()> returned.
+arguments, returns the exact same hashref (or raw doctype) last call to
+C<grab()> returned.
 
 =head2 C<doctype>
 
@@ -345,8 +365,22 @@ well as mention about the XML prolog and any non-whitespace characters
 present. If no doctype was found on the page the string will only contain
 words C<NO DOCTYPE>.
 
+If C<raw> argument (see CONSTRUCTOR) is set to a true value the C<doctype()>
+method will return the same raw doctype as C<result()> and C<grab()> method
+would.
+
 B<Note:> this method is overloaded for C<q|""|> thus you can simply
 interpolate your object in a string to call this method.
+
+=head2 C<raw>
+
+    my $do_get_raw = $grabber->raw;
+
+    $grabber->raw( 1 );
+
+This method is an accessor/mutator of constructor's C<raw> argument.
+See "CONSTRUCTOR" section for details. When given the optional argument
+will assign a new value to C<raw> argument.
 
 =head2 C<ua>
 

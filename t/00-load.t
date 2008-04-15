@@ -14,7 +14,7 @@ diag( "Testing WWW::DoctypeGrabber $WWW::DoctypeGrabber::VERSION, Perl $], $^X" 
 
 my $o = WWW::DoctypeGrabber->new;
 isa_ok($o,'WWW::DoctypeGrabber');
-can_ok($o, qw(new grab error result doctype));
+can_ok($o, qw(new grab error result doctype raw));
 isa_ok( $o->ua, 'LWP::UserAgent', 'ua()');
 
 SKIP: {
