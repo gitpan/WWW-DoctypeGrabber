@@ -27,7 +27,8 @@ SKIP: {
           "doctype" => "HTML 4.01 Strict + url",
           "xml_prolog" => 0,
           "non_white_space" => 0,
-          "has_doctype" => 1
+          "has_doctype" => 1,
+            'mime' => 'text/html'
     };
     is_deeply( $o->result, $VAR1, 'return from result()');
     is_deeply( $res, $VAR1, 'return from grab()');

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use lib '../lib';
+use lib qw(lib ../lib);
 use WWW::DoctypeGrabber;
 
 die "Usage: perl grab.pl <URI_of_webpage>\n"

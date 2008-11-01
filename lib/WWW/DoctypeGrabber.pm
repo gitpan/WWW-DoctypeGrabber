@@ -3,7 +3,7 @@ package WWW::DoctypeGrabber;
 use warnings;
 use strict;
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 use Carp;
 use LWP::UserAgent;
@@ -48,7 +48,12 @@ sub grab {
 
     my $response = $self->ua->get( $uri );
     if ( $response->is_success ) {
-        return $self->result( $self->_parse_doctype($response->content) );
+        return $self->result(
+            $self->_parse_doctype(
+                $response->content,
+                $response->header('Content-type'),
+            )
+        );
     }
     else {
         return $self->_set_error( $response, 'net' );
@@ -56,13 +61,14 @@ sub grab {
 }
 
 sub _parse_doctype {
-    my ( $self, $content ) = @_;
+    my ( $self, $content, $mime ) = @_;
 
     my %parse_result = (
         xml_prolog      => 0,
         non_white_space => 0,
         has_doctype     => 0,
-        doctype         => undef,
+        doctype         => '',
+        mime            => $mime,
     );
 
     DOCTYPE_PARSE: {
@@ -298,7 +304,8 @@ otherwise returns a hashref with the following keys/values:
         'doctype' => 'HTML 4.01 Strict + url',
         'xml_prolog' => 0,
         'non_white_space' => 0,
-        'has_doctype' => 1
+        'has_doctype' => 1,
+        'mime' => 'text/html; charset=UTF-8'
     };
 
 =head3 C<doctype>
@@ -309,7 +316,7 @@ The C<doctype> key will contain the name of the doctype (e.g. HTML 4.01
 Strict) and possibly words C<+ url> indicating that a known DTD URI is also
 specified. If DTD URI is not recognized the C<doctype> value will say so,
 if doctype is not recognized the C<doctype> value will have the doctype
-as is.
+as is. If the page does not have a doctype then C<doctype> will contain an empty string.
 
 =head3 C<xml_prolog>
 
@@ -331,6 +338,12 @@ characters (excluding XML prologs) present before the doctype.
 
 The C<has_doctype> key will have either true or false value indicating
 whether or not the doctype was found on the page.
+
+=head3 C<mime>
+
+    { 'mime' => 'text/html; charset=UTF-8' }
+
+The C<mime> key will contain the value of the C<Content-type> header.
 
 =head2 C<error>
 

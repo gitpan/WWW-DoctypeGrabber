@@ -1,5 +1,8 @@
 Revision history for WWW-DoctypeGrabber
 
+0.003   November 1, 2008
+        Added the Content-type in output
+
 0.002   Apr 15, 2008
         added the C<raw()> argument/method
 
