@@ -28,7 +28,7 @@ SKIP: {
           "xml_prolog" => 0,
           "non_white_space" => 0,
           "has_doctype" => 1,
-            'mime' => 'text/html'
+            'mime' => 'text/html; charset=ISO-8859-1'
     };
     is_deeply( $o->result, $VAR1, 'return from result()');
     is_deeply( $res, $VAR1, 'return from grab()');

@@ -1,5 +1,8 @@
 Revision history for WWW-DoctypeGrabber
 
+0.004   January 18, 2009
+        Fixed a new bug in test suite due to updates in the website it accesses
+
 0.003   November 1, 2008
         Added the Content-type in output
 
