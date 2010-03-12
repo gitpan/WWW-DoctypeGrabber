@@ -1,5 +1,8 @@
 Revision history for WWW-DoctypeGrabber
 
+0.005   March 12, 2010
+	Fixed a new bug in test suite due to updates in the website it accesses
+
 0.004   January 18, 2009
         Fixed a new bug in test suite due to updates in the website it accesses
 
