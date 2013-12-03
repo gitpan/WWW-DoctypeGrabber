@@ -3,19 +3,19 @@ package WWW::DoctypeGrabber;
 use warnings;
 use strict;
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 use Carp;
 use LWP::UserAgent;
-use base 'Class::Data::Accessor';
+use base 'Class::Accessor::Grouped';
 use overload q|""|, sub { shift->doctype; };
-__PACKAGE__->mk_classaccessors qw(
+__PACKAGE__->mk_group_accessors( simple => qw(
     ua
     error
     doctype
     result
     raw
-);
+));
 
 sub new {
     my $self = bless {}, shift;
@@ -150,32 +150,32 @@ sub _get_dtd_uri_table {
     return {
         'HTML 4.01 Strict'                       =>
             'http://www.w3.org/TR/html4/strict.dtd',
-        
-        'HTML 4.01 Transitional'                 => 
+
+        'HTML 4.01 Transitional'                 =>
             'http://www.w3.org/TR/html4/loose.dtd',
-        
-        'HTML 4.01 Frameset'                     => 
+
+        'HTML 4.01 Frameset'                     =>
             'http://www.w3.org/TR/html4/frameset.dtd',
-        
-        'XHTML 1.0 Strict'                       => 
+
+        'XHTML 1.0 Strict'                       =>
             'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd',
-        
-        'XHTML 1.0 Transitional'                 => 
+
+        'XHTML 1.0 Transitional'                 =>
             'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd',
-        
-        'XHTML 1.0 Frameset'                     => 
+
+        'XHTML 1.0 Frameset'                     =>
             'http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd',
-        
+
         'XHTML 1.1'                              =>
             'http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd',
-        
+
         'XHTML Basic 1.0'                        =>
             'http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd',
-        
+
         'XHTML Basic 1.1'                        =>
             'http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd',
-        
-        'XHTML 1.1 plus MathML 2.0 plus SVG 1.1' => 
+
+        'XHTML 1.1 plus MathML 2.0 plus SVG 1.1' =>
             'http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd',
     };
 }
@@ -193,6 +193,8 @@ sub _set_error {
 
 1;
 __END__
+
+=encoding utf8
 
 =head1 NAME
 
@@ -366,7 +368,7 @@ C<grab()> returned.
     $grabber->grab('http://zoffix.com');
 
     print "Doctype is: " . $grabber->doctype . "\n";
-    
+
     # or
 
     print "Doctype is: $grabber\n";
@@ -398,7 +400,7 @@ will assign a new value to C<raw> argument.
 =head2 C<ua>
 
     my $old_ua = $grabber->ua;
-    
+
     $grabber->ua( LWP::UserAgent->new( agent => 'foos' ) );
 
 Returns a current L<LWP::UserAgent> object used for retrieving doctypes.
