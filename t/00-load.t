@@ -5,7 +5,7 @@ use Test::More tests => 12;
 BEGIN {
     use_ok('Carp');
     use_ok('LWP::UserAgent');
-    use_ok('Class::Data::Accessor');
+    use_ok('Class::Accessor::Grouped');
     use_ok('overload');
 	use_ok( 'WWW::DoctypeGrabber' );
 }

@@ -1,5 +1,8 @@
 Revision history for WWW-DoctypeGrabber
 
+0.007  2013-12-07
+        - Fixed broken test
+
 0.006  2013-12-02
         - Minor fixes to comply with the specs and Kwalitee game
         - Added autogeneration of README from POD

@@ -3,7 +3,7 @@ package WWW::DoctypeGrabber;
 use warnings;
 use strict;
 
-our $VERSION = '0.006';
+our $VERSION = '0.007';
 
 use Carp;
 use LWP::UserAgent;
